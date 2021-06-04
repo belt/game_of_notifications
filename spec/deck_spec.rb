@@ -5,9 +5,15 @@ RSpec.describe Deck do
 
   shared_examples_for "counting cards" do
     it "reports number of cards remaining in the deck" do
+      expect(deck.count).to eq(52)
     end
 
     it "drawing a card reduces deck count", :aggregate_failures do
+      expect { deck.draw }.to change(deck, :count).by(-1)
+      expect do
+        deck.draw
+        deck.draw
+      end.to change(deck, :count).by(-2)
     end
   end
 
@@ -21,7 +27,7 @@ RSpec.describe Deck do
       second_draw = deck.draw
       first_suit = first_draw.suit
       second_suit = second_draw.suit
-      expect([first_suit, first_draw.value]).not_to eq([second_suit, second_draw])
+      expect([first_suit, first_draw.value]).not_to eq([second_suit, second_draw.value])
     end
   end
 
