@@ -13,9 +13,15 @@ RSpec.describe Deck do
 
   shared_examples_for "dealing a card" do
     it "draws a card from the deck" do
+      expect(deck.draw).to be_a_kind_of(Card)
     end
 
     it "draws a different random card from the deck with each call" do
+      first_draw = deck.draw
+      second_draw = deck.draw
+      first_suit = first_draw.suit
+      second_suit = second_draw.suit
+      expect([first_suit, first_draw.value]).not_to eq([second_suit, second_draw])
     end
   end
 
@@ -25,6 +31,7 @@ RSpec.describe Deck do
       it_behaves_like "counting cards"
 
       it "shuffles the order of cards" do
+        expect { deck.shuffle }.to change(deck, :cards)
       end
     end
 
