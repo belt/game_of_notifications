@@ -3,36 +3,54 @@ RSpec.describe Game do
     described_class.new
   end
 
+  let(:dealer) { Dealer.new }
+
+  let(:artisan) { Player.new name: "Considers technologies akin to playing with Legos (TM)" }
+  let(:engineer) { Player.new name: "More than one language, best-practices" }
+  let(:developer) { Player.new name: "One language, less than 5 yrs XP" }
+  let(:syntax_jockey) { Player.new name: "Bootcamp graduate" }
+  let(:not_a_coder) { Player.new name: "Bossen" }
+  let(:players) do
+    [artisan, engineer, developer, syntax_jockey, not_a_coder].shuffle
+  end
+
+  let(:player) { players.shuffle }
+
   context "when starting a game" do
     context "when a dealer and 4 players want to play a game" do
-      it "should wait for the 5th player" do
+      it "waits for the 5th player" do
       end
     end
 
     context "when 5 players and no dealer want to play a game" do
-      it "should wait for the dealer" do
+      it "waits for the dealer" do
       end
     end
 
     context "when a dealer and 5 players want to play a game" do
-      it "should have a dealer and 5 players" do
+      it "has a dealer and a set of players", :aggregate_failures do
+        expect(game.players).to be_a_kind_of(Set)
+        expect(game.dealer).to be_a_kind_of(Dealer)
+      end
+
+      it "has a dealer and 5 players" do
       end
     end
 
     context "when a dealer and 6 players want to play a game" do
       # NOTE: limits games to 5 players
-      it "should have a dealer and 5 players" do
+      it "has a dealer and 5 players" do
       end
 
       # NOTE: tracks games played
-      it "should make the 6th player wait until the next game" do
+      it "makes the 6th player wait until the next game" do
       end
     end
   end
 
   context "when playing a game" do
     context "when handing out cards" do
-      it "should give 2 cards to each player and 2 to the dealer", :aggregate_failures do
+      it "gives 2 cards to each player and 2 to the dealer", :aggregate_failures do
       end
     end
   end
