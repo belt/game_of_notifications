@@ -1,0 +1,72 @@
+require:
+  - rubocop-performance
+  - rubocop-rspec
+
+AllCops:
+  TargetRubyVersion: 3.0
+  Exclude:
+    - bin/*
+  NewCops: enable
+
+# comply with reek
+Naming/RescuedExceptionsVariableName:
+  Enabled: true
+  PreferredName: error
+
+# layout
+Layout/CaseIndentation:
+  EnforcedStyle: end
+Layout/EndAlignment:
+  Enabled: true
+  EnforcedStyleAlignWith: variable
+Layout/LineLength:
+  Enabled: true
+  Max: 100
+Layout/ParameterAlignment:
+  EnforcedStyle: with_fixed_indentation
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+  IndentationWidth: 2
+
+# metrics
+Metrics/AbcSize:
+  Enabled: true
+  Max: 25
+Metrics/BlockLength:
+  Enabled: true
+  Exclude:
+    - spec/**/*
+Metrics/ClassLength:
+  Enabled: true
+  # Max: 100
+Metrics/ModuleLength:
+  Enabled: true
+  # Max: 200
+Metrics/MethodLength:
+  Max: 15
+Metrics/ParameterLists:
+  Enabled: true
+  Max: 4
+
+# naming
+Naming/PredicateName:
+  Description: 'Check the names of predicate methods.'
+  StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#bool-methods-qmark'
+  ForbiddenPrefixes:
+    - is_
+
+# rspec
+RSpec/NamedSubject:
+  Enabled: true
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+
+# style
+Style/AndOr:
+  EnforcedStyle: conditionals
+Style/FrozenStringLiteralComment:
+  Enabled: false
+Style/PerlBackrefs:
+  Enabled: true
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
