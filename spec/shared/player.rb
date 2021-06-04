@@ -1,6 +1,10 @@
 RSpec.shared_examples_for "a player" do
-  it "has a name" do
-    expect(player.name).to_not be_nil
+  it "insists player names are non-blank", :aggregate_failures do
+    expect(described_class.new(name: "Paul").name).to eq "Paul"
+
+    expect { described_class.new nil }.to raise_error(ArgumentError)
+    expect { described_class.new "" }.to raise_error(ArgumentError)
+    expect { described_class.new " " }.to raise_error(ArgumentError)
   end
 
   context "when initializing round setup" do

@@ -5,12 +5,9 @@ RSpec.describe Player do
     described_class.new
   end
 
-  it "insists players have non-blank names", :aggregate_failures do
-    expect( described_class.new(name: "Paul").name ).to eq "Paul"
+  it_behaves_like "a player"
 
-    expect{ described_class.new }.to raise_error(ArgumentError)
-    expect{ described_class.new nil}.to raise_error(ArgumentError)
-    expect{ described_class.new "" }.to raise_error(ArgumentError)
-    expect{ described_class.new " "}.to raise_error(ArgumentError)
+  it "insists player names are non-blank" do
+    expect { described_class.new }.to raise_error(ArgumentError)
   end
 end

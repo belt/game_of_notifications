@@ -5,6 +5,10 @@ RSpec.describe Dealer do
     described_class.new
   end
 
-  it "insists dealer have names" do
+  it_behaves_like "a player"
+
+  it "insists player names are non-blank", :aggregate_failures do
+    expect { described_class.new }.not_to raise_error(ArgumentError)
+    expect(described_class.new.name).to eq("I am root")
   end
 end
