@@ -7,8 +7,14 @@ RSpec.describe Dealer do
 
   it_behaves_like "a player"
 
-  it "insists player names are non-blank", :aggregate_failures do
-    expect { described_class.new }.not_to raise_error(ArgumentError)
+  it "insists player names are non-blank" do
     expect(described_class.new.name).to eq("I am root")
+  end
+
+  context "when dealer cheats" do
+    before { described_class.config.dealer_always_wins = true }
+
+    it "includes the dealer in the winners list" do
+    end
   end
 end
