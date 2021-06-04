@@ -8,10 +8,10 @@ gem "pry-byebug"
 gem "zeitwerk"
 
 group :development, :test do
-  gem "rspec"
   gem "bond"
   gem "byebug", platform: :mri
   gem "interactive_editor"
+  gem "rspec"
 
   gem "rubocop-performance", require: false
   gem "rubocop-rspec", require: false
