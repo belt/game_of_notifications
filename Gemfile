@@ -5,6 +5,7 @@ gem "awesome_print", require: "ap"
 gem "deck-of-cards"
 gem "pry-bond"
 gem "pry-byebug"
+gem "securerandom"
 gem "zeitwerk"
 
 group :development, :test do

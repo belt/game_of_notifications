@@ -1,3 +1,5 @@
+require "active_support/notifications"
+
 RSpec.describe Game do
   subject(:game) do
     described_class.new
@@ -14,9 +16,27 @@ RSpec.describe Game do
     [artisan, engineer, developer, syntax_jockey, not_a_coder].shuffle
   end
 
-  let(:player) { players.shuffle }
+  let(:player) { players.sample }
 
   context "when starting a game" do
+    context "when a players want to play a game" do
+      before do
+        allow(ActiveSupport::Notifications).to receive(:publish).with(
+          "player.enters_game",
+          player_name: player.name
+        ).and_call_original
+      end
+
+      it "player sits at a table", :aggregate_failures do
+        expect { player.enter_game }.to change(game.players, :count).by(1)
+
+        expect(ActiveSupport::Notifications).to have_received(:publish).with(
+          "player.enters_game",
+          player_name: player.name
+        )
+      end
+    end
+
     context "when a dealer and 4 players want to play a game" do
       it "waits for the 5th player" do
       end

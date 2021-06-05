@@ -69,6 +69,7 @@ GEM
       rubocop (~> 1.0)
       rubocop-ast (>= 1.1.0)
     ruby-progressbar (1.11.0)
+    securerandom (0.1.0)
     spoon (0.0.6)
       ffi
     tzinfo (2.0.4)
@@ -91,6 +92,7 @@ DEPENDENCIES
   rspec
   rubocop-performance
   rubocop-rspec
+  securerandom
   zeitwerk
 
 BUNDLED WITH
