@@ -1,11 +1,21 @@
 # We got game
 class Game
   attr_accessor :dealer
-  attr_reader :players
+  attr_reader :players, :game_token
 
   def initialize
+    @game_token = SecureRandom.uuid
     @players = Set.new
     @dealer = Dealer.new
+    @dealer.token = SecureRandom.uuid
+
+    open_table(player: @dealer)
+    token_msg = {
+      player_name: @dealer.name, game_token: @game_token, player_token: @dealer.token
+    }
+    ActiveSupport::Notifications.publish("game.provides_game_tokens", token_msg)
+
+    @status = :not_started
     ::Subscribers::Game.register_listeners(game: self)
   end
 
@@ -40,13 +50,13 @@ class Game
   end
 
   STATUS_CALLBACKS = {
-    started: lambda { |game, dealer, players|
-      dealer.request_cards
+    started: lambda { |game|
+      game.dealer.request_cards
 
       # Async do
         # round robin (SO much room for improvement e.g. fibers or concurrent-ruby or async)
         # either-way, we want to ensure all messages are processed before continuing
-        players.map(&:request_cards)
+        game.players.map(&:request_cards)
       # end
 
       game
@@ -55,6 +65,7 @@ class Game
 
   def trigger(status:)
     @status = status
+    STATUS_CALLBACKS.fetch(status).call(self)
   end
 
   def started?

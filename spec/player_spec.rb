@@ -15,18 +15,46 @@ RSpec.describe Player do
   context "when starting a game" do
     context "when player sits at a table" do
       before do
+        game # ensure player is instantiated else listeners aren't bound
+
         allow(ActiveSupport::Notifications).to receive(:publish).with(
           "player.enters_game",
           player_name: player.name
         ).and_call_original
+        allow(ActiveSupport::Notifications).to receive(:publish).with(
+          "game.provides_game_tokens",
+          {
+            game_token: a_kind_of(String), player_name: player.name,
+            player_token: a_kind_of(String)
+          }
+        ).and_call_original
+        allow(ActiveSupport::Notifications).to receive(:publish).with(
+          "game.player_in_queue",
+          {
+            player_name: player.name, game_token: a_kind_of(String),
+            player_token: nil
+          }
+        ).and_call_original
       end
 
-      it "player notifies game an I am here message", :aggregate_failures do
-        expect(player.enter_game).to be_a_kind_of(Game)
-        expect(ActiveSupport::Notifications).to have_received(:publish).with(
+      let(:game) { Game.new }
+
+      it "player notifies game an I am here message" do
+        # rubocop:disable RSpec/MessageSpies
+        expect(ActiveSupport::Notifications).to receive(:publish).with(
           "player.enters_game",
-          player_name: player.name
-        )
+          { player_name: player.name }
+        ).ordered
+        expect(ActiveSupport::Notifications).to receive(:publish).with(
+          "game.provides_game_tokens",
+          {
+            game_token: a_kind_of(String), player_name: player.name,
+            player_token: a_kind_of(String)
+          }
+        ).ordered
+        # rubocop:enable RSpec/MessageSpies
+
+        player.enter_game
       end
     end
   end
