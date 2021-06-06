@@ -43,4 +43,8 @@ class Player
     ActiveSupport::Notifications.publish("player.requests_cards", req_msg)
     req_msg
   end
+
+  def receive_cards(cards:)
+    @cards_in_hand = cards
+  end
 end

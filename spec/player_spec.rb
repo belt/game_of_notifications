@@ -17,31 +17,7 @@ RSpec.describe Player do
       before do
         game # ensure player is instantiated else listeners aren't bound
 
-        allow(ActiveSupport::Notifications).to receive(:publish).with(
-          "player.enters_game",
-          player_name: player.name
-        ).and_call_original
-        allow(ActiveSupport::Notifications).to receive(:publish).with(
-          "game.provides_game_tokens",
-          {
-            game_token: a_kind_of(String), player_name: player.name,
-            player_token: a_kind_of(String)
-          }
-        ).and_call_original
-        allow(ActiveSupport::Notifications).to receive(:publish).with(
-          "game.player_in_queue",
-          {
-            player_name: player.name, game_token: a_kind_of(String),
-            player_token: nil
-          }
-        ).and_call_original
-        allow(ActiveSupport::Notifications).to receive(:publish).with(
-          "player.requests_cards",
-          {
-            player_name: player.name, game_token: a_kind_of(String),
-            player_token: a_kind_of(String)
-          }
-        ).and_call_original
+        allow(ActiveSupport::Notifications).to receive(:publish).and_call_original
       end
 
       let(:game) { Game.new }
@@ -60,6 +36,43 @@ RSpec.describe Player do
           }
         ).ordered
         # rubocop:enable RSpec/MessageSpies
+
+        player.enter_game
+      end
+    end
+
+    context "when player fills a table" do
+      let(:artisan) do
+        described_class.new name: "Considers technologies akin to playing with Legos (TM)"
+      end
+      let(:game) { Game.new }
+      let(:engineer) { described_class.new name: "More than one language, best-practices" }
+      let(:developer) { described_class.new name: "One language, less than 5 yrs XP" }
+      let(:syntax_jockey) { described_class.new name: "Bootcamp graduate" }
+      let(:not_a_coder) { described_class.new name: "Bossen" }
+      let(:all_players) do
+        [artisan, engineer, developer, syntax_jockey, not_a_coder].shuffle
+      end
+
+      before do
+        game # ensure player is instantiated else listeners aren't bound
+
+        allow(ActiveSupport::Notifications).to receive(:publish).and_call_original
+      end
+
+      it "player notifies game an I am here message" do
+        # rubocop:disable RSpec/MessageSpies
+        expect(ActiveSupport::Notifications).to receive(:publish).with(
+          "player.enters_game",
+          { player_name: player.name }
+        ).ordered
+        expect(ActiveSupport::Notifications).to receive(:publish).with(
+          "game.provides_game_tokens",
+          {
+            game_token: a_kind_of(String), player_name: player.name,
+            player_token: a_kind_of(String)
+          }
+        ).ordered
 
         player.enter_game
       end

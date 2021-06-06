@@ -23,27 +23,7 @@ RSpec.describe Game do
       before do
         game # ensure game is instantiated else listeners aren't bound
 
-        allow(ActiveSupport::Notifications).to receive(:publish).with(
-          "player.enters_game",
-          player_name: player.name
-        ).and_call_original
-        allow(ActiveSupport::Notifications).to receive(:publish).with(
-          "game.provides_game_tokens",
-          {
-            player_name: player.name, game_token: a_kind_of(String),
-            player_token: a_kind_of(String)
-          }
-        ).and_call_original
-        allow(ActiveSupport::Notifications).to receive(:publish).with(
-          "game.player_in_queue",
-          {
-            player_name: player.name, game_token: a_kind_of(String),
-            player_token: nil
-          }
-        ).and_call_original
-        allow(ActiveSupport::Notifications).to receive(:publish).with(
-          "player.requests_cards", player_name: player.name
-        ).and_call_original
+        allow(ActiveSupport::Notifications).to receive(:publish).and_call_original
       end
 
       it "increases the player-count by 1" do
