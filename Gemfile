@@ -1,6 +1,7 @@
 source "https://rubygems.org"
 
 gem "activesupport"
+gem "async"
 gem "awesome_print", require: "ap"
 gem "deck-of-cards"
 gem "pry-bond"

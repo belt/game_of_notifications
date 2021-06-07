@@ -3,13 +3,21 @@ module Subscribers
   module Game
     module_function
 
+    def player_name(msg:)
+      msg[:player_name]
+    end
+
+    def msg_game_token(msg:)
+      msg[:game_token]
+    end
+
     def register_listeners(game:)
       ActiveSupport::Notifications.subscribe("player.enters_game") do |_, msg|
-        player_name = msg[:player_name]
+        pn = player_name(msg: msg)
 
         # don't be rude: acknowledge the player even if no tokens are available
-        unless game.player_already_sitting?(player_name: player_name)
-          player = ::Player.new(name: player_name)
+        unless game.player_already_sitting?(player_name: pn)
+          player = ::Player.new(name: pn)
           game.acknowledge_player(player: player)
         end
 
@@ -28,14 +36,14 @@ module Subscribers
       end
 
       ActiveSupport::Notifications.subscribe("player.requests_cards") do |_, msg|
-        player_name = msg[:player_name]
-        player = game.player_already_sitting?(player_name: player_name)
+        pn = player_name(msg: msg)
+        player = game.player_already_sitting?(player_name: pn)
 
         # all players must requst cards
         cards = if game.game_token == msg_game_token(msg: msg) && player
           ack_msg = {
-            player_name: player.name, game_token: game.game_token,
-            player_token: player.token, cards: game.deal_cards(player_name: player_name)
+            player_name: pn, game_token: msg_game_token(msg: msg),
+            player_token: player.token, cards: game.deal_cards(player_name: pn)
           }
 
           if ack_msg[:cards]

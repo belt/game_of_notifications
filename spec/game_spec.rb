@@ -5,7 +5,7 @@ RSpec.describe Game do
     described_class.new
   end
 
-  let(:dealer) { Dealer.new }
+  let(:_dealer) { Dealer.new }
 
   let(:artisan) { Player.new name: "Considers technologies akin to playing with Legos (TM)" }
   let(:engineer) { Player.new name: "More than one language, best-practices" }
@@ -56,8 +56,6 @@ RSpec.describe Game do
 
     context "when a dealer and 4 players want to play a game" do
       subject(:seated_players) { players[0..3] }
-
-      let(:game) { described_class.new }
 
       before { game }
 
@@ -153,8 +151,6 @@ RSpec.describe Game do
   context "when playing a game" do
     subject(:seated_players) { players[0..4] }
 
-    let(:game) { described_class.new }
-
     before do
       game # ensure game is instantiated else listeners aren't bound
     end
@@ -176,7 +172,7 @@ RSpec.describe Game do
           acc[risk_taker.name] = a_kind_of(Set)
           acc
         end
-        hand_schema[dealer.name] = a_kind_of(Set)
+        hand_schema[game.dealer.name] = a_kind_of(Set)
 
         expect(game.hands.keys).to match_array(hand_schema.keys)
 
