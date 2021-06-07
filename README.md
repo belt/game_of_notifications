@@ -14,3 +14,13 @@ h2. Rules
 h2. Extra Credit
 
 Each player is remote and has to queue, sync, and timeout.
+
+h2. Installation
+
+$ git clone https://github.com/belt/game_of_notifications
+$ cd . # assumes rvm is installed and properly configured
+$ bundle
+
+h2. Usage (assumes working ruby environment)
+
+$ bin/demo.rb
