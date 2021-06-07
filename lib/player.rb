@@ -37,4 +37,10 @@ class Player
     ActiveSupport::Notifications.publish("player.receives_tokens", tok_msg)
     tok_msg
   end
+
+  def request_cards
+    req_msg = { player_name: name, game_token: game_token, player_token: token }
+    ActiveSupport::Notifications.publish("player.requests_cards", req_msg)
+    req_msg
+  end
 end

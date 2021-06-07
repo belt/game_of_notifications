@@ -41,6 +41,9 @@ RSpec.describe Game do
             player_token: nil
           }
         ).and_call_original
+        allow(ActiveSupport::Notifications).to receive(:publish).with(
+          "player.requests_cards", player_name: player.name
+        ).and_call_original
       end
 
       it "increases the player-count by 1" do

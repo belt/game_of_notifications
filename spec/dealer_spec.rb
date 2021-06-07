@@ -11,6 +11,10 @@ RSpec.describe Dealer do
     expect(described_class.new.name).to eq("I am root")
   end
 
+  it "has a deck" do
+    expect(dealer.deck).to be_a_kind_of(Deck)
+  end
+
   context "when dealer cheats" do
     before { described_class.config.dealer_always_wins = true }
 

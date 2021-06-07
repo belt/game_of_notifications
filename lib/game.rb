@@ -1,10 +1,10 @@
 # We got game
 class Game
   attr_accessor :dealer
-  attr_reader :players, :game_token
+  attr_reader :players, :game_token, :hands
 
   def initialize
-    @game_token = SecureRandom.uuid
+    @game_token = SecureRandom.uuid.freeze
     @players = Set.new
     @dealer = Dealer.new
     @dealer.token = SecureRandom.uuid
@@ -16,6 +16,7 @@ class Game
     ActiveSupport::Notifications.publish("game.provides_game_tokens", token_msg)
 
     @status = :not_started
+    @hands = {}
     ::Subscribers::Game.register_listeners(game: self)
   end
 
@@ -45,8 +46,12 @@ class Game
   end
 
   def player_already_sitting?(player_name:)
+    return dealer if player_name == dealer.name
+
     # NOTE: being lazy and not going to write case-insensitive search specs (for now)
-    players.detect { |player| player.name.casecmp(player_name).zero? }
+    players.detect do |player|
+      player.name.casecmp(player_name).zero?
+    end
   end
 
   STATUS_CALLBACKS = {
@@ -70,5 +75,14 @@ class Game
 
   def started?
     @status == :started
+  end
+
+  def deal_cards(player_name:)
+    player = player_already_sitting?(player_name: player_name)
+    return unless (started? && player) || player_name == dealer.name
+
+    hand = Set.new([dealer.draw, dealer.draw])
+    @hands[player_name] = hand
+    hand
   end
 end

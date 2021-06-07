@@ -35,6 +35,13 @@ RSpec.describe Player do
             player_token: nil
           }
         ).and_call_original
+        allow(ActiveSupport::Notifications).to receive(:publish).with(
+          "player.requests_cards",
+          {
+            player_name: player.name, game_token: a_kind_of(String),
+            player_token: a_kind_of(String)
+          }
+        ).and_call_original
       end
 
       let(:game) { Game.new }

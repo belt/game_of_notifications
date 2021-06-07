@@ -1,4 +1,5 @@
 require "active_support/configurable"
+require "active_support/core_ext/module/delegation"
 
 # a slight-of-hand specialist
 class Dealer < Player
@@ -12,4 +13,14 @@ class Dealer < Player
     @token = SecureRandom.uuid
     super name: @name
   end
+
+  def deck
+    @deck ||= Deck.new
+  end
+
+  def open_new_pack
+    @deck = Deck.new
+  end
+
+  delegate :draw, to: :deck
 end
