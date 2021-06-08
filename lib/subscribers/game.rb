@@ -78,10 +78,6 @@ module Subscribers
           qed_msg
         end
       end
-
-      ActiveSupport::Notifications.subscribe("player.requests_cards") do |_, msg|
-        game.deal_cards(**msg.slice(:player_name))
-      end
     end
   end
 end
